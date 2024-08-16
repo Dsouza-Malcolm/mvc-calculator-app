@@ -33,7 +33,7 @@ body {
   background-color: var(--drk-black);
   height: fit-content;
   color: white;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-weight: 700;
   font-size: 1.5rem;
   margin: 1rem 1rem;
@@ -121,7 +121,7 @@ button {
   padding: 0.6rem 0;
   background-color: var(--lgt-black);
   color: var(--white);
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-weight: 700;
   font-size: 1.4rem;
   cursor: pointer;

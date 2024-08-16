@@ -5,9 +5,7 @@ class CalculatorUI {
   #darkModeBtn = document.querySelector('.mode-btn');
 
   addEventHandlerKeys(handler) {
-    this.#keys.addEventListener('click', (e) => {
-      handler(e);
-    });
+    this.#keys.addEventListener('click', handler);
   }
 
   addEventHandleDarkMode(handler) {

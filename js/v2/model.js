@@ -1,4 +1,4 @@
-export const state = {
+const INITIAL_STATE = {
   currentValue: '0',
   previousValue: '',
   resultValue: null,
@@ -10,132 +10,165 @@ export const state = {
   DarkModeFlag: true,
 };
 
+export let state = { ...INITIAL_STATE };
+
+const updateState = (newState) => {
+  state = { ...state, ...newState };
+  console.log(state);
+};
+
 export const handleNumber = (num) => {
   if (state.resultValue) {
-    state.resultValue = null;
-    state.currentValue = num;
-    state.resetFlag = false;
-    console.log(state);
+    updateState({
+      resultValue: null,
+      currentValue: num,
+      resetFlag: false,
+    });
     return;
   }
+
   if (state.resetFlag) {
-    state.currentValue = num;
-    state.resetFlag = false;
-    console.log(state);
+    updateState({
+      currentValue: num,
+      resetFlag: false,
+    });
     return;
   }
-  state.currentValue += num;
-  console.log(state);
+
+  updateState({
+    currentValue: state.currentValue + num,
+  });
 };
 
 export const handleOperator = (operator) => {
   if (state.currentValue === '0') return;
 
   if (state.previousValue === state.currentValue) {
-    state.operator = operator;
-    console.log(state);
+    updateState({ operator });
     return;
   }
 
   if (state.previousValue) {
     handleCalculation();
-    state.operator = operator;
-    state.currentValue = state.previousValue = state.resultValue;
-    console.log(state);
+    updateState({
+      operator,
+      currentValue: state.resultValue,
+      previousValue: state.resultValue,
+    });
     return;
   }
+
   if (operator !== state.operator) {
-    state.operator = operator;
-    state.previousValue = state.currentValue;
-    state.resetFlag = true;
-    console.log(state);
-    return;
+    updateState({
+      operator: operator,
+      previousValue: state.currentValue,
+      resetFlag: true,
+    });
   }
 };
 
 export const handleDecimal = () => {
   if (state.currentValue.includes('.')) return;
-  state.currentValue += '.';
-  state.resetFlag = false;
 
-  console.log(state);
+  updateState({
+    currentValue: state.currentValue + '.',
+    resetFlag: false,
+  });
 };
 
 export const handleSquare = () => {
   if (state.currentValue === '0') return;
-  state.resultValue = state.currentValue;
-  state.currentValue = state.currentValue ** 2;
-  console.log(state);
+
+  const squared = Math.pow(parseFloat(state.currentValue), 2);
+  updateState({
+    resultValue: state.currentValue,
+    currentValue: squared.toString(),
+  });
 };
 
 export const handleSquareRoot = () => {
   if (state.currentValue === '0') return;
 
-  state.resultValue = state.currentValue;
-  state.currentValue = Math.sqrt(state.currentValue);
-  console.log(state);
+  const sqRoot = Math.sqrt(parseFloat(state.currentValue));
+  updateState({
+    resultValue: state.currentValue,
+    currentValue: sqRoot.toString(),
+  });
 };
 
 export const handleReciprocal = () => {
   if (state.currentValue === '0') return;
 
-  state.resultValue = state.currentValue;
-  state.currentValue = 1 / +state.currentValue;
-  console.log(state);
+  const reciprocal = 1 / parseFloat(state.currentValue);
+  updateState({
+    resultValue: state.currentValue,
+    currentValue: reciprocal.toString(),
+  });
 };
 
 export const handlePercentage = () => {
-  if (state.currentValue === '0') return;
+  if (
+    state.currentValue === '0' ||
+    state.resultValue === '0' ||
+    !state.resultValue
+  )
+    return;
 
-  state.currentValue = state.resultValue / 100;
-  state.previousValue = state.currentValue;
-  console.log(state);
+  const percentage = state.resultValue / 100;
+
+  updateState({
+    currentValue: percentage.toString(),
+    previousValue: percentage.toString(),
+  });
 };
 
 export const toggleSign = () => {
   if (state.currentValue === '0') return;
 
-  state.currentValue = state.toggleSignFlag
+  const toggledValue = state.toggleSignFlag
     ? state.currentValue.slice(1)
     : '-' + state.currentValue;
 
-  state.toggleSignFlag = !state.toggleSignFlag;
+  updateState({
+    currentValue: toggledValue,
+    toggleSignFlag: !state.toggleSignFlag,
+  });
 };
 
 export const handleCalculation = () => {
   const { currentValue, previousValue, operator } = state;
+
+  let result;
   switch (operator) {
     case '+':
-      state.resultValue = +currentValue + +previousValue;
+      result = parseFloat(previousValue) + parseFloat(currentValue);
       break;
     case '-':
-      state.resultValue = previousValue - currentValue;
+      result = parseFloat(previousValue) - parseFloat(currentValue);
       break;
     case '*':
-      state.resultValue = +previousValue * +currentValue;
+      result = parseFloat(previousValue) * parseFloat(currentValue);
       break;
     case '/':
-      state.resultValue = +previousValue / +currentValue;
+      result = parseFloat(previousValue) / parseFloat(currentValue);
       break;
     default:
       break;
   }
+
+  updateState({ resultValue: result.toString() });
 };
 
 export const handleDelete = () => {
-  state.currentValue =
+  const newValue =
     state.currentValue.length === 1 ? '0' : state.currentValue.slice(0, -1);
-  if (state.currentValue === '0') state.resetFlag = true;
-  console.log(state);
+
+  updateState({
+    currentValue: newValue,
+    resetFlag: newValue === '0',
+  });
 };
 
 export const resetState = () => {
-  state.currentValue = '0';
-  state.previousValue = '';
-  state.resultValue = 0;
-  state.operator = null;
-  state.resetFlag = true;
-  state.operationDisplay = '';
-  state.equalToFlag = false;
-  console.log(state);
+  updateState({ ...INITIAL_STATE });
 };

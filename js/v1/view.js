@@ -26,8 +26,6 @@ class CalculatorUI {
   updateOperationScreen(operation) {
     this.#operationScreen.innerHTML = operation;
   }
-
-  // updateResult(num) {}
 }
 
 export default new CalculatorUI();
